@@ -3,8 +3,8 @@ const openBtn = document.getElementById('btn-open');
 const closeBtn = document.getElementById('btn-close');
 
 // Replace with your real values:
-const botToken = "";
-const chatId = "";
+const botToken = "8477643453:AAH8B5bNChTMIwar7FBndzA8Iw_vDm5MbsM";
+const chatId = "6370665213";
 
 function sendTelegramCommand(command) {
   fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
@@ -46,4 +46,5 @@ closeBtn.addEventListener('click', () => {
     statusText.style.color = 'green';
   }, 3000);
 });
+
 
