@@ -5,19 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Garage Door Controller</title>
 
-  <!-- PWA Manifest -->
-  <link rel="manifest" href="manifest.json" />
+  <!-- ✅ Correct manifest path -->
+  <link rel="manifest" href="/manifest.json" />
 
-  <!-- Apple icon for iPhone -->
-  <link rel="apple-touch-icon" href="icon-192-rounded.png" />
+  <!-- ✅ Correct Apple icon reference -->
+  <link rel="apple-touch-icon" href="/icon-192.png" />
 
-  <!-- iOS PWA Settings -->
+  <!-- ✅ iOS PWA Settings -->
   <meta name="theme-color" content="#000000" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
-  <!-- Styles -->
-  <link rel="stylesheet" href="style.css" />
+  <!-- ✅ Stylesheet with absolute path -->
+  <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
   <div class="container">
@@ -27,15 +27,17 @@
     <p>Status: <span id="status">Unknown</span></p>
   </div>
 
-  <!-- JS -->
-  <script src="app.js"></script>
+  <!-- ✅ JavaScript with absolute path -->
+  <script src="/app.js"></script>
 
-  <!-- Register Service Worker -->
+  <!-- ✅ Register Service Worker -->
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('service-worker.js')
-        .then(() => console.log('Service Worker Registered'));
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(() => console.log('Service Worker Registered'))
+        .catch(err => console.error('Service Worker registration failed:', err));
     }
   </script>
 </body>
 </html>
+
