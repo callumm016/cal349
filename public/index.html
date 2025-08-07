@@ -10,6 +10,7 @@
   <meta name="theme-color" content="#000000" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
   <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
@@ -19,13 +20,61 @@
     <p>Status: <span id="status">Loading...</span></p>
   </div>
 
-  <script src="/app.js"></script>
   <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/service-worker.js')
-        .then(() => console.log('Service Worker Registered'))
-        .catch(err => console.error('Service Worker registration failed:', err));
+    const statusDisplay = document.getElementById("status");
+    const triggerBtn = document.getElementById("btn-trigger");
+    const ESP32_IP = "http://192.168.1.137"; // Replace with your public IP later
+
+    let expectedState = "";
+
+    async function getStatus() {
+      try {
+        const res = await fetch(`${ESP32_IP}/status`);
+        const status = await res.text();
+        statusDisplay.textContent = status;
+
+        // Stop pulsing if expected state is reached
+        if (expectedState && status.toUpperCase() === expectedState) {
+          triggerBtn.classList.remove("pulsing");
+          triggerBtn.disabled = false;
+          expectedState = "";
+        }
+      } catch (err) {
+        statusDisplay.textContent = "ERROR";
+        triggerBtn.classList.remove("pulsing");
+        triggerBtn.disabled = false;
+      }
     }
+
+    async function triggerDoor() {
+      try {
+        triggerBtn.classList.add("pulsing");
+        triggerBtn.disabled = true;
+
+        // Determine expected state based on current one
+        const currentStatus = statusDisplay.textContent.toUpperCase();
+        expectedState = currentStatus === "CLOSED" ? "OPEN" : "CLOSED";
+
+        await fetch(`${ESP32_IP}/trigger`);
+        getStatus(); // initial check
+
+        // Poll every second until the expected state is reached
+        const poll = setInterval(async () => {
+          await getStatus();
+          if (!expectedState) clearInterval(poll);
+        }, 1000);
+      } catch (err) {
+        triggerBtn.classList.remove("pulsing");
+        triggerBtn.disabled = false;
+        statusDisplay.textContent = "ERROR";
+      }
+    }
+
+    triggerBtn.addEventListener("click", triggerDoor);
+
+    // Start checking status on load and every 5 sec
+    getStatus();
+    setInterval(getStatus, 5000);
   </script>
 </body>
 </html>
