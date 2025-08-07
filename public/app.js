@@ -1,4 +1,4 @@
-// Firebase SDK imports (for Vite/ES6 or use <script> tag if needed)
+// Firebase SDK imports
 import { initializeApp } from "firebase/app";
 import { getDatabase, ref, set, onValue } from "firebase/database";
 
@@ -14,47 +14,42 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+const db  = getDatabase(app);
 
 const statusDisplay = document.getElementById("status");
-const btnOpen = document.getElementById("btn-open");
+const btnOpen  = document.getElementById("btn-open");
 const btnClose = document.getElementById("btn-close");
 
-// 🔄 Live update the status from Firebase
+// Live update the status from Firebase
 const statusRef = ref(db, "status");
-
 onValue(statusRef, (snapshot) => {
   const status = snapshot.val();
   if (status) {
-    statusDisplay.textContent = `Door is: ${status.toUpperCase()}`;
+    statusDisplay.textContent = Door is: ${String(status).toUpperCase()};
   } else {
     statusDisplay.textContent = "Status: Unknown";
   }
 });
 
-// 🚪 Send command to open or close
-function sendCommand(command, button) {
-  const commandRef = ref(db, "command");
-  button.disabled = true;
-  button.classList.add("pulsing");
-
-  set(commandRef, command)
-    .then(() => {
-      console.log(`Command '${command}' sent.`);
-    })
-    .catch((error) => {
-      console.error("Failed to send command:", error);
-      statusDisplay.textContent = "COMMAND ERROR";
-    })
-    .finally(() => {
-      setTimeout(() => {
-        button.disabled = false;
-        button.classList.remove("pulsing");
-      }, 2000); // give ESP32 time to act
-    });
+// Send command to open or close
+async function sendCommand(command, button) {
+  try {
+    button.disabled = true;
+    button.classList.add("pulsing");
+    await set(ref(db, "command"), command);
+    console.log(`Command '${command}' sent.`);
+  } catch (err) {
+    console.error("Failed to send command:", err);
+    statusDisplay.textContent = "COMMAND ERROR";
+  } finally {
+    setTimeout(() => {
+      button.disabled = false;
+      button.classList.remove("pulsing");
+    }, 2000); // give ESP32 time to act/clear
+  }
 }
 
-// 🔘 Button event bindings
+// Button event bindings
 btnOpen.addEventListener("click", () => sendCommand("open", btnOpen));
 btnClose.addEventListener("click", () => sendCommand("close", btnClose));
 
