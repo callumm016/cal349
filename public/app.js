@@ -1,34 +1,51 @@
+// ✅ JavaScript: app.js
 const statusDisplay = document.getElementById("status");
-const triggerBtn = document.getElementById("trigger");
+const openBtn = document.getElementById("btn-open");
+const closeBtn = document.getElementById("btn-close");
 
-const ESP32_IP = "http://192.168.1.137"; // 🔁 Replace with public IP when ready
+const ESP32_IP = "http://192.168.1.137"; // Replace with public IP when ready
 
 async function getStatus() {
   try {
     const res = await fetch(`${ESP32_IP}/status`);
     const txt = await res.text();
     statusDisplay.textContent = txt;
+    return txt;
   } catch (err) {
     statusDisplay.textContent = "ERROR";
+    return "ERROR";
   }
 }
 
-async function triggerDoor() {
+async function triggerDoor(targetState) {
+  const btn = targetState === "OPEN" ? openBtn : closeBtn;
+  btn.disabled = true;
+  btn.textContent = targetState === "OPEN" ? "Opening..." : "Closing...";
+  btn.classList.add("loading");
+
   try {
-    triggerBtn.disabled = true;
-    triggerBtn.textContent = "Triggering...";
     await fetch(`${ESP32_IP}/trigger`);
-    await getStatus(); // Refresh after trigger
-    triggerBtn.textContent = "Trigger Door";
-    triggerBtn.disabled = false;
+
+    // Wait until the reed reports the desired state or timeout after 15s
+    const timeout = Date.now() + 15000;
+    let state;
+    do {
+      await new Promise(r => setTimeout(r, 1000));
+      state = await getStatus();
+    } while (state !== targetState && Date.now() < timeout);
+
   } catch (err) {
-    triggerBtn.textContent = "Failed!";
+    console.error("Trigger failed:", err);
   }
+
+  btn.textContent = targetState === "OPEN" ? "Open" : "Close";
+  btn.disabled = false;
+  btn.classList.remove("loading");
 }
 
-triggerBtn.addEventListener("click", triggerDoor);
+openBtn.addEventListener("click", () => triggerDoor("OPEN"));
+closeBtn.addEventListener("click", () => triggerDoor("CLOSED"));
 
-// Run every 5 seconds
 getStatus();
 setInterval(getStatus, 5000);
 
