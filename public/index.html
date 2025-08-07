@@ -5,32 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Garage Door Controller</title>
 
-  <!-- ✅ Correct manifest path -->
   <link rel="manifest" href="/manifest.json" />
-
-  <!-- ✅ Correct Apple icon reference -->
   <link rel="apple-touch-icon" href="/icon-192.png" />
-
-  <!-- ✅ iOS PWA Settings -->
   <meta name="theme-color" content="#000000" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-
-  <!-- ✅ Stylesheet with absolute path -->
   <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
   <div class="container">
     <h1>Garage Door Controller</h1>
-    <button id="btn-open">Open</button>
-    <button id="btn-close">Close</button>
-    <p>Status: <span id="status">Unknown</span></p>
+    <button id="btn-trigger">Open / Close</button>
+    <p>Status: <span id="status">Loading...</span></p>
   </div>
 
-  <!-- ✅ JavaScript with absolute path -->
   <script src="/app.js"></script>
-
-  <!-- ✅ Register Service Worker -->
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/service-worker.js')
