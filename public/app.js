@@ -1,11 +1,8 @@
 const statusDisplay = document.getElementById("status");
-const openBtn = document.getElementById("btn-open");
-const closeBtn = document.getElementById("btn-close");
-const loader = document.createElement("span");
-loader.className = "loader";
-loader.style.marginLeft = "10px";
+const btnOpen = document.getElementById("btn-open");
+const btnClose = document.getElementById("btn-close");
 
-const ESP32_IP = "http://192.168.1.137"; // Replace with public IP when ready
+const ESP32_IP = "http://192.168.1.137"; // Replace with public IP later
 
 async function getStatus() {
   try {
@@ -19,11 +16,11 @@ async function getStatus() {
   }
 }
 
-async function waitForStatus(targetState) {
-  let retries = 30; // 30 x 500ms = 15s
+async function waitForStatus(expectedState) {
+  let retries = 30;
   while (retries-- > 0) {
-    const state = await getStatus();
-    if (state === targetState) return true;
+    const current = await getStatus();
+    if (current === expectedState) return true;
     await new Promise(res => setTimeout(res, 500));
   }
   return false;
@@ -32,35 +29,23 @@ async function waitForStatus(targetState) {
 async function triggerDoor(expectedState, button) {
   try {
     button.disabled = true;
-    const originalText = button.textContent;
-    button.textContent = ${expectedState === "OPEN" ? "Opening" : "Closing"}...;
-    button.appendChild(loader);
-
+    button.classList.add("pulsing");
     await fetch(`${ESP32_IP}/trigger`);
-    const success = await waitForStatus(expectedState);
-
-    if (!success) {
-      button.textContent = "Timeout";
-    } else {
-      button.textContent = ${expectedState}ED;
-    }
-
-    await new Promise(res => setTimeout(res, 1500));
-    button.textContent = originalText;
-    button.disabled = false;
-    loader.remove();
+    await waitForStatus(expectedState);
   } catch (err) {
-    button.textContent = "Error";
-    loader.remove();
+    statusDisplay.textContent = "ERROR";
+  } finally {
+    button.disabled = false;
+    button.classList.remove("pulsing");
   }
 }
 
-openBtn.addEventListener("click", () => triggerDoor("OPEN", openBtn));
-closeBtn.addEventListener("click", () => triggerDoor("CLOSED", closeBtn));
+btnOpen.addEventListener("click", () => triggerDoor("OPEN", btnOpen));
+btnClose.addEventListener("click", () => triggerDoor("CLOSED", btnClose));
 
-// Run every 5 seconds
 getStatus();
 setInterval(getStatus, 5000);
+
 
 
 
