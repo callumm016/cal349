@@ -2,80 +2,62 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Garage Door Controller</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 40px;
+      background: #111;
+      color: #eee;
+    }
 
-  <link rel="manifest" href="/manifest.json" />
-  <link rel="apple-touch-icon" href="/icon-192.png" />
-  <meta name="theme-color" content="#000000" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    h1 {
+      margin-bottom: 20px;
+    }
 
-  <link rel="stylesheet" href="/style.css" />
+    #status {
+      font-size: 1.5rem;
+      margin: 20px 0;
+    }
+
+    button {
+      font-size: 1.25rem;
+      padding: 15px 30px;
+      margin: 10px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: #007bff;
+      color: white;
+      transition: background-color 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    button.pulsing {
+      animation: pulse 0.8s infinite alternate;
+    }
+
+    @keyframes pulse {
+      from { background-color: #007bff; }
+      to   { background-color: #339aff; }
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Garage Door Controller</h1>
-    <button id="btn-trigger">Open / Close</button>
-    <p>Status: <span id="status">Loading...</span></p>
-  </div>
+  <h1>Garage Door Control</h1>
 
-  <script>
-    const statusDisplay = document.getElementById("status");
-    const triggerBtn = document.getElementById("btn-trigger");
-    const ESP32_IP = "http://192.168.1.137"; // Replace with your public IP later
+  <p id="status">Connecting to Firebase...</p>
 
-    let expectedState = "";
+  <button id="btn-open">Open Door</button>
+  <button id="btn-close">Close Door</button>
 
-    async function getStatus() {
-      try {
-        const res = await fetch(`${ESP32_IP}/status`);
-        const status = await res.text();
-        statusDisplay.textContent = status;
-
-        // Stop pulsing if expected state is reached
-        if (expectedState && status.toUpperCase() === expectedState) {
-          triggerBtn.classList.remove("pulsing");
-          triggerBtn.disabled = false;
-          expectedState = "";
-        }
-      } catch (err) {
-        statusDisplay.textContent = "ERROR";
-        triggerBtn.classList.remove("pulsing");
-        triggerBtn.disabled = false;
-      }
-    }
-
-    async function triggerDoor() {
-      try {
-        triggerBtn.classList.add("pulsing");
-        triggerBtn.disabled = true;
-
-        // Determine expected state based on current one
-        const currentStatus = statusDisplay.textContent.toUpperCase();
-        expectedState = currentStatus === "CLOSED" ? "OPEN" : "CLOSED";
-
-        await fetch(`${ESP32_IP}/trigger`);
-        getStatus(); // initial check
-
-        // Poll every second until the expected state is reached
-        const poll = setInterval(async () => {
-          await getStatus();
-          if (!expectedState) clearInterval(poll);
-        }, 1000);
-      } catch (err) {
-        triggerBtn.classList.remove("pulsing");
-        triggerBtn.disabled = false;
-        statusDisplay.textContent = "ERROR";
-      }
-    }
-
-    triggerBtn.addEventListener("click", triggerDoor);
-
-    // Start checking status on load and every 5 sec
-    getStatus();
-    setInterval(getStatus, 5000);
-  </script>
+  <script type="module" src="./app.js"></script>
 </body>
 </html>
+
 
