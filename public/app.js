@@ -21,11 +21,9 @@ const btnClose = document.getElementById("btn-close");
 // Live status listener
 onValue(ref(db, "status"), (snapshot) => {
   const val = snapshot.val();
-  if (val) {
-    statusDisplay.textContent = Door is: ${String(val).toUpperCase()};
-  } else {
-    statusDisplay.textContent = "Status: Unknown";
-  }
+  statusDisplay.textContent = val
+    ? Door is: ${String(val).toUpperCase()}
+    : "Status: Unknown";
 });
 
 // Send command helper
@@ -40,7 +38,6 @@ async function sendCommand(cmd) {
 
 btnOpen.addEventListener("click", () => sendCommand("open"));
 btnClose.addEventListener("click", () => sendCommand("close"));
-
 
 
 
