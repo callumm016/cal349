@@ -1,8 +1,6 @@
-// Firebase SDK imports
-import { initializeApp } from "firebase/app";
-import { getDatabase, ref, set, onValue } from "firebase/database";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
 
-// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyDqssj5Comk-OkqWSGb7uc83jFtd9FNAMU",
   authDomain: "garage-door-project-7c1b1.firebaseapp.com",
@@ -20,38 +18,28 @@ const statusDisplay = document.getElementById("status");
 const btnOpen  = document.getElementById("btn-open");
 const btnClose = document.getElementById("btn-close");
 
-// Live update the status from Firebase
-const statusRef = ref(db, "status");
-onValue(statusRef, (snapshot) => {
-  const status = snapshot.val();
-  if (status) {
-    statusDisplay.textContent = Door is: ${String(status).toUpperCase()};
+// Live status listener
+onValue(ref(db, "status"), (snapshot) => {
+  const val = snapshot.val();
+  if (val) {
+    statusDisplay.textContent = Door is: ${String(val).toUpperCase()};
   } else {
     statusDisplay.textContent = "Status: Unknown";
   }
 });
 
-// Send command to open or close
-async function sendCommand(command, button) {
+// Send command helper
+async function sendCommand(cmd) {
   try {
-    button.disabled = true;
-    button.classList.add("pulsing");
-    await set(ref(db, "command"), command);
-    console.log(`Command '${command}' sent.`);
+    await set(ref(db, "command"), cmd);
+    console.log(`Command '${cmd}' sent`);
   } catch (err) {
-    console.error("Failed to send command:", err);
-    statusDisplay.textContent = "COMMAND ERROR";
-  } finally {
-    setTimeout(() => {
-      button.disabled = false;
-      button.classList.remove("pulsing");
-    }, 2000); // give ESP32 time to act/clear
+    console.error("Error sending command:", err);
   }
 }
 
-// Button event bindings
-btnOpen.addEventListener("click", () => sendCommand("open", btnOpen));
-btnClose.addEventListener("click", () => sendCommand("close", btnClose));
+btnOpen.addEventListener("click", () => sendCommand("open"));
+btnClose.addEventListener("click", () => sendCommand("close"));
 
 
 
