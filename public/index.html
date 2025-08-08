@@ -2,51 +2,44 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Minimal PWA Test</title>
-
-  <!-- Fullscreen on iOS -->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="PWA Test" />
-
-  <!-- PWA manifest -->
-  <link rel="manifest" href="/manifest.json" />
-  <meta name="theme-color" content="#000000" />
-
-  <!-- iOS icon (place this file EXACTLY at /apple-touch-icon.png) -->
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Garage Door Controller</title>
   <style>
-    :root{
-      --top: env(safe-area-inset-top, 0px);
-      --right: env(safe-area-inset-right, 0px);
-      --bottom: env(safe-area-inset-bottom, 0px);
-      --left: env(safe-area-inset-left, 0px);
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 40px;
+      background: #111;
+      color: #eee;
     }
-    html, body {
-      margin: 0; padding: 0; min-height: 100dvh;
-      background:#111; color:#eee; font-family: -apple-system, system-ui, Arial, sans-serif;
+    h1 { margin-bottom: 20px; }
+    #status { font-size: 1.5rem; margin: 20px 0; }
+    button {
+      font-size: 1.25rem;
+      padding: 15px 30px;
+      margin: 10px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: #007bff;
+      color: white;
+      transition: background-color 0.2s ease;
     }
-    main {
-      box-sizing: border-box; text-align:center;
-      padding: calc(24px + var(--top)) calc(16px + var(--right)) calc(24px + var(--bottom)) calc(16px + var(--left));
+    button:hover { background-color: #0056b3; }
+    button.pulsing { animation: pulse 0.8s infinite alternate; }
+    @keyframes pulse {
+      from { background-color: #007bff; }
+      to   { background-color: #339aff; }
     }
-    h1 { margin: 0 0 12px; }
-    #hint { display:none; background:#222; border:1px solid #333; border-radius:10px; padding:10px; margin:0 auto 16px; max-width:520px; }
   </style>
 </head>
 <body>
-  <main>
-    <h1>Minimal PWA Test</h1>
-    <div id="hint">Add to Home Screen and open from there to hide Safari’s bar.</div>
-    <p id="state">Loading…</p>
-  </main>
+  <h1>Garage Door Control</h1>
+  <p id="status">Connecting to Firebase...</p>
+  <button id="btn-open">Open Door</button>
+  <button id="btn-close">Close Door</button>
 
-  <script>
-    const standalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
-    document.getElementById('state').textContent = 'Standalone: ' + standalone;
-    if (!standalone) document.getElementById('hint').style.display = 'block';
-  </script>
+  <script type="module" src="./app.js?v=1"></script>
 </body>
 </html>
+
