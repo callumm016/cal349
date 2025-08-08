@@ -22,7 +22,7 @@ const btnOpen = document.getElementById("btn-open");
 const btnClose = document.getElementById("btn-close");
 
 // Check if elements exist
-if (!statusDisplaybtnClose!) {
+if (statusDisplaybtnClose) {
   console.error("Missing required HTML elements");
 }
 
@@ -50,6 +50,7 @@ function sendCommand(cmd) {
 // Button click events
 btnOpen.addEventListener("click", function() { sendCommand("open"); });
 btnClose.addEventListener("click", function() { sendCommand("close"); });
+
 
 
 
