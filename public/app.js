@@ -23,7 +23,7 @@ const btnOpen  = document.getElementById("btn-open");
 const btnClose = document.getElementById("btn-close");
 
 // ===== Guard: ensure HTML matches IDs =====
-if (!statusDisplay!btnClose) {
+if (!statusDisplaybtnClose) {
   console.error("❌ Missing #status, #btn-open, or #btn-close in HTML");
 }
 
@@ -51,6 +51,7 @@ async function sendCommand(cmd) {
 // ===== Button bindings =====
 btnOpen.addEventListener("click", () => sendCommand("open"));
 btnClose.addEventListener("click", () => sendCommand("close"));
+
 
 
 
