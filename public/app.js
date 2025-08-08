@@ -15,15 +15,15 @@ const firebaseConfig = {
 
 // ===== Init Firebase =====
 const app = initializeApp(firebaseConfig);
-const db  = getDatabase(app);
+const db = getDatabase(app);
 
 // ===== Get HTML elements =====
 const statusDisplay = document.getElementById("status");
-const btnOpen  = document.getElementById("btn-open");
+const btnOpen = document.getElementById("btn-open");
 const btnClose = document.getElementById("btn-close");
 
 // ===== Guard: ensure HTML matches IDs =====
-if (!statusDisplaybtnClose) {
+if (!statusDisplay || !btnOpen || !btnClose) {
   console.error("❌ Missing #status, #btn-open, or #btn-close in HTML");
 }
 
@@ -31,7 +31,7 @@ if (!statusDisplaybtnClose) {
 onValue(ref(db, "status"), (snapshot) => {
   const val = snapshot.val();
   if (val) {
-    statusDisplay.textContent = Door is: ${String(val).toUpperCase()};
+    statusDisplay.textContent = `Door: ${String(val).toUpperCase()}`;
   } else {
     statusDisplay.textContent = "Status: Unknown";
   }
@@ -51,7 +51,6 @@ async function sendCommand(cmd) {
 // ===== Button bindings =====
 btnOpen.addEventListener("click", () => sendCommand("open"));
 btnClose.addEventListener("click", () => sendCommand("close"));
-
 
 
 
