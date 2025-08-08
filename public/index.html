@@ -3,70 +3,108 @@
 <head>
   <meta charset="UTF-8" />
 
-  <!-- Fullscreen on iOS + safe areas -->
+  <!-- Fullscreen on iOS (no Safari bar) -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Garage Door">
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Garage Door" />
 
   <!-- PWA manifest & theme -->
-  <link rel="manifest" href="/manifest.json">
-  <meta name="theme-color" content="#000000">
-  <!-- (optional but nice) home screen icon -->
-  <link rel="apple-touch-icon" href="/icons/apple-touch-icon-180.png">
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#000000" />
+
+  <!-- iOS Home Screen icon (put your Earth PNG at /apple-touch-icon.png, 180x180 or bigger, square) -->
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
   <title>Garage Door Controller</title>
 
   <style>
+    :root {
+      /* fallback if env() not supported */
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-right: env(safe-area-inset-right, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-left: env(safe-area-inset-left, 0px);
+    }
+
     html, body {
       margin: 0;
       padding: 0;
-      min-height: 100dvh; /* use full dynamic viewport */
+      min-height: 100dvh; /* dynamic viewport so toolbars don’t squash us */
       background: #111;
       color: #eee;
-      font-family: sans-serif;
+      font-family: -apple-system, system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
     }
 
-    /* keep content clear of the iPhone home-indicator area in standalone mode */
     body {
-      padding-top: calc(40px + env(safe-area-inset-top));
-      padding-right: env(safe-area-inset-right);
-      padding-bottom: calc(40px + env(safe-area-inset-bottom));
-      padding-left: env(safe-area-inset-left);
+      padding-top: calc(24px + var(--safe-top));
+      padding-right: calc(16px + var(--safe-right));
+      padding-bottom: calc(24px + var(--safe-bottom));
+      padding-left: calc(16px + var(--safe-left));
       text-align: center;
+      box-sizing: border-box;
     }
 
-    h1 { margin-bottom: 20px; }
-    #status { font-size: 1.5rem; margin: 20px 0; }
+    h1 { margin: 0 0 16px; font-size: 1.4rem; }
+    #status { font-size: 1.1rem; margin: 16px 0 24px; opacity: 0.9; }
+
+    .btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 
     button {
-      font-size: 1.25rem;
-      padding: 15px 30px;
-      margin: 10px;
+      font-size: 1.15rem;
+      padding: 14px 24px;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       cursor: pointer;
-      background-color: #007bff;
-      color: white;
-      transition: background-color 0.2s ease;
+      background-color: #0a84ff;
+      color: #fff;
+      transition: filter 0.15s ease;
+      min-width: 140px;
+      touch-action: manipulation;
     }
-    button:hover { background-color: #0056b3; }
+    button:hover { filter: brightness(0.9); }
+    button:active { filter: brightness(0.8); }
     button.pulsing { animation: pulse 0.8s infinite alternate; }
+
     @keyframes pulse {
-      from { background-color: #007bff; }
-      to   { background-color: #339aff; }
+      from { filter: brightness(1); }
+      to   { filter: brightness(1.2); }
+    }
+
+    /* Banner hint if user didn’t open from Home Screen */
+    #standalone-hint {
+      display: none;
+      background: #222;
+      color: #fff;
+      border: 1px solid #333;
+      padding: 10px 12px;
+      border-radius: 10px;
+      margin: 0 auto 16px;
+      max-width: 520px;
+      font-size: 0.95rem;
     }
   </style>
 </head>
 <body>
   <h1>Garage Door Control</h1>
+  <div id="standalone-hint">Add to Home Screen and open from there to hide Safari’s bar.</div>
   <p id="status">Connecting to Firebase...</p>
-  <button id="btn-open">Open Door</button>
-  <button id="btn-close">Close Door</button>
 
-  <script type="module" src="./app.js?v=1"></script>
+  <div class="btns">
+    <button id="btn-open">Open Door</button>
+    <button id="btn-close">Close Door</button>
+  </div>
+
+  <!-- Your app logic -->
+  <script type="module" src="./app.js?v=2"></script>
+
+  <!-- Tiny check to warn if not in standalone -->
+  <script>
+    const inStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+    if (!inStandalone) {
+      const el = document.getElementById('standalone-hint');
+      if (el) el.style.display = 'block';
+    }
+  </script>
 </body>
 </html>
-
-
-
