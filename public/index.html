@@ -2,29 +2,44 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Garage Door Controller</title>
   <style>
-    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; text-align:center; padding:40px; background:#111; color:#eee; }
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 40px;
+      background: #111;
+      color: #eee;
+    }
     h1 { margin-bottom: 20px; }
     #status { font-size: 1.5rem; margin: 20px 0; }
-    button { font-size: 1.25rem; padding: 15px 30px; margin: 10px; border: 0; border-radius: 8px; cursor: pointer; background: #007bff; color: #fff; transition: background-color .2s; }
-    button:hover { background: #0056b3; }
-    button.pulsing { animation: pulse .8s infinite alternate; }
-    @keyframes pulse { from { background:#007bff; } to { background:#339aff; } }
+    button {
+      font-size: 1.25rem;
+      padding: 15px 30px;
+      margin: 10px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: #007bff;
+      color: white;
+      transition: background-color 0.2s ease;
+    }
+    button:hover { background-color: #0056b3; }
+    button.pulsing { animation: pulse 0.8s infinite alternate; }
+    @keyframes pulse {
+      from { background-color: #007bff; }
+      to   { background-color: #339aff; }
+    }
   </style>
 </head>
 <body>
   <h1>Garage Door Control</h1>
-
-  <p id="status">Status: Connecting…</p>
-
+  <p id="status">Connecting to Firebase...</p>
   <button id="btn-open">Open Door</button>
   <button id="btn-close">Close Door</button>
 
-  <!-- IMPORTANT: cache-buster so Edge/PWA loads the new JS -->
-  <script type="module" src="./app.js?v=4"></script>
-  <noscript>Enable JavaScript to use this app.</noscript>
+  <script type="module" src="./app.js?v=1"></script>
 </body>
 </html>
 
