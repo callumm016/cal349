@@ -2,18 +2,43 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Fullscreen on iOS + safe areas -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Garage Door">
+
+  <!-- PWA manifest & theme -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#000000">
+  <!-- (optional but nice) home screen icon -->
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon-180.png">
+
   <title>Garage Door Controller</title>
+
   <style>
-    body {
-      font-family: sans-serif;
-      text-align: center;
-      padding: 40px;
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100dvh; /* use full dynamic viewport */
       background: #111;
       color: #eee;
+      font-family: sans-serif;
     }
+
+    /* keep content clear of the iPhone home-indicator area in standalone mode */
+    body {
+      padding-top: calc(40px + env(safe-area-inset-top));
+      padding-right: env(safe-area-inset-right);
+      padding-bottom: calc(40px + env(safe-area-inset-bottom));
+      padding-left: env(safe-area-inset-left);
+      text-align: center;
+    }
+
     h1 { margin-bottom: 20px; }
     #status { font-size: 1.5rem; margin: 20px 0; }
+
     button {
       font-size: 1.25rem;
       padding: 15px 30px;
@@ -42,5 +67,6 @@
   <script type="module" src="./app.js?v=1"></script>
 </body>
 </html>
+
 
 
