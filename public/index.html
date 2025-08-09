@@ -2,18 +2,64 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Core viewport + Safe-area for iPhone X+ notches -->
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  />
+
   <title>Garage Door Controller</title>
+
+  <!-- Link to your PWA manifest -->
+  <link rel="manifest" href="/manifest.json" />
+
+  <!-- iOS standalone mode -->
+  <meta
+    name="apple-mobile-web-app-capable"
+    content="yes"
+  />
+  <meta
+    name="apple-mobile-web-app-status-bar-style"
+    content="black-translucent"
+  />
+  <meta
+    name="apple-mobile-web-app-title"
+    content="Garage Door"
+  />
+
+  <!-- iOS home-screen icon -->
+  <link
+    rel="apple-touch-icon"
+    href="/icon-192.png"
+  />
+
   <style>
+    html,
     body {
-      font-family: sans-serif;
-      text-align: center;
-      padding: 40px;
+      margin: 0;
+      padding: 0;
+      height: 100%;
       background: #111;
       color: #eee;
+      font-family: sans-serif;
+      text-align: center;
+      /* apply safe-area insets */
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+      padding-left: env(safe-area-inset-left);
+      padding-right: env(safe-area-inset-right);
     }
-    h1 { margin-bottom: 20px; }
-    #status { font-size: 1.5rem; margin: 20px 0; }
+
+    h1 {
+      margin: 20px 0;
+    }
+
+    #status {
+      font-size: 1.5rem;
+      margin: 20px 0;
+    }
+
     button {
       font-size: 1.25rem;
       padding: 15px 30px;
@@ -25,11 +71,22 @@
       color: white;
       transition: background-color 0.2s ease;
     }
-    button:hover { background-color: #0056b3; }
-    button.pulsing { animation: pulse 0.8s infinite alternate; }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    button.pulsing {
+      animation: pulse 0.8s infinite alternate;
+    }
+
     @keyframes pulse {
-      from { background-color: #007bff; }
-      to   { background-color: #339aff; }
+      from {
+        background-color: #007bff;
+      }
+      to {
+        background-color: #339aff;
+      }
     }
   </style>
 </head>
