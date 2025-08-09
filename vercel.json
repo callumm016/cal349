@@ -1,13 +1,9 @@
-{
-  "rewrites": [
-    { "source": "/manifest.json",        "destination": "/manifest.json" },
-    { "source": "/service-worker.js",     "destination": "/service-worker.js" },
-    { "source": "/icon-192.png",          "destination": "/icon-192.png" },
-    { "source": "/icon-512-rounded.png",  "destination": "/icon-512-rounded.png" },
-    { "source": "/icon-512-maskable.png", "destination": "/icon-512-maskable.png" },
-    { "source": "/app.js",                "destination": "/app.js" },
-    { "source": "/style.css",             "destination": "/style.css" },
+{ 
 
-    { "source": "/:path*",                "destination": "/index.html" }
-  ]
-}
+  "rewrites": [ 
+
+    { "source": "/(.*)", "destination": "/index.html" } 
+
+  ] 
+
+} 
