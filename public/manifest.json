@@ -2,7 +2,7 @@
   "name": "Garage Door Controller",
   "short_name": "Garage",
   "description": "Control your garage door remotely with a simple, full-screen PWA.",
-  "start_url": "/index.html?homescreen=1",
+  "start_url": "/?homescreen=1",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
@@ -27,5 +27,6 @@
     }
   ]
 }
+
 
 
