@@ -1,4 +1,12 @@
-// ===== Firebase SDK imports =====
+// app.js (top of file)
+const isStandalone =
+  window.matchMedia('(display-mode: standalone)').matches ||
+  navigator.standalone === true;
+
+console.log('PWA standalone?', isStandalone);
+
+
+// ===== Firebase SDK imports ===== + delete everything above
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
 
@@ -51,6 +59,7 @@ async function sendCommand(cmd) {
 // ===== Button bindings =====
 btnOpen.addEventListener("click", () => sendCommand("open"));
 btnClose.addEventListener("click", () => sendCommand("close"));
+
 
 
 
